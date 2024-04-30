@@ -34,41 +34,45 @@ To start the application, run the following command:
 
 This Python script provides two API endpoints for fetching Ethereum wallet balances.
 
-### Direct Balance Fetch
+### 1. Direct Balance Fetch
 
 Uses whitelist for token contracts. Resource: [etherscan.io](https://etherscan.io/exportData?type=open-source-contract-codes)
 
-**Endpoint:** /direct/balance/{wallet}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Endpoint:** /direct/balance/{wallet}
 
-**Method:** GET
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Method:** GET
 
-**Description:** This endpoint returns the balance of a given Ethereum wallet by making direct contract calls to the Ethereum network.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:** This endpoint returns the balance of a given Ethereum wallet by making direct contract calls to the Ethereum network.
 
 #### Parameters:
 
-**wallet:** The Ethereum wallet address.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**wallet:** The Ethereum wallet address.
 
 #### Query Parameters:
 
-**chain:** The blockchain network to use. Defaults to 'eth'. `!Note: currently only Ethereum is supported` 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**chain:** The blockchain network to use. Defaults to 'eth'. `!Note: currently only Ethereum is supported` 
 
-**limit:** The maximum number of tokens to fetch. Must be an integer between 1 and 10000. Defaults to 10.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**limit:** The maximum number of tokens to fetch. Must be an integer between 1 and 10000. Defaults to 10.
+
+**Request:** GET /direct/balance/0x40B38765696e3d5d8d9d834D8AaD4bB6e418E489?chain=eth&limit=100
 
 **Response:** A JSON object containing the balances of all tokens in the wallet. Each key is a token symbol and the corresponding value is the balance of that token.
 
-### Ethplorer API Balance Fetch
+### 2. Ethplorer API Balance Fetch
 
 No whitelist used for this approach, returns all tokens that have non-zero balance for a given wallet address. `!Note: may return scam tokens as well` 
 
-**Endpoint:** /api/balance/{wallet}
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Endpoint:** /api/balance/{wallet}
 
-**Method:** GET
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Method:** GET
 
-**Description:** This endpoint returns the balance of a given Ethereum wallet by fetching data from the Ethplorer API.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:** This endpoint returns the balance of a given Ethereum wallet by fetching data from the Ethplorer API.
 
 #### Parameters:
 
-**wallet:** The Ethereum wallet address.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**wallet:** The Ethereum wallet address.
+
+**Request:** GET /api/balance/0x40B38765696e3d5d8d9d834D8AaD4bB6e418E489
 
 **Response:** A JSON object containing the balances of all tokens in the wallet. Each key is a token symbol and the corresponding value is the balance of that token.
 
@@ -76,7 +80,22 @@ No whitelist used for this approach, returns all tokens that have non-zero balan
 #### Response example:
 
     {
-        "ETH": 0.123456789,
-        "DAI": 456.789,
-        "USDT": 123456.789
+        "$Lgc": 30027759.615466926,
+        "0GAS": 634693783629.8918,
+        "AAVE": 0.25,
+        "ABC-RAQ": 0.12345678,
+        "AEVO": 36000000.0,
+        "AIBEN": 16296830.070638577,
+        "AIMEME": 180245928.89033905,
+        "ALCOH": 430309801.1317416,
+        "ALF": 1000000.0,
+        "BABY": 114950644.0196546,
+        "BABYKISHU": 1978.02,
+        "BABYPOO": 2070442.7303935334,
+        "BABYPSYOP": 9282362.362215867,
+        "BABYSAMO": 42340.62712453486,
+        "BABYSHIB": 19184014452758.484,
+        "BALM": 215350255.0224826,
+        "BARRETT": 485608427.1148974,
+        "BENBABY": 140013081.94892895
     }
