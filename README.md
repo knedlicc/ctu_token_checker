@@ -12,6 +12,8 @@ The application uses the following environment variables:
 
 **ETHPLORER_API_KEY:** Your Ethplorer API key. This is used to fetch data from the Ethplorer API.
 
+**MORALIS_API_KEY:** Your Moralis API key. This is used to fetch top 100 Ethereum chain tokens by market cap.
+
 ## ERC20_ABI
 The application includes the ABI (Application Binary Interface) for ERC20 tokens. This ABI is used to interact with ERC20 token contracts on the Ethereum network. It includes the balanceOf, decimals, and symbol functions.
 
@@ -24,6 +26,7 @@ To install the necessary packages for this script, use pip:
     pip install python-dotenv
     pip install pandas
     pip install requests
+    pip install moralis
 
 ## Usage
 To start the application, run the following command:
@@ -37,7 +40,7 @@ This Python script provides two API endpoints for fetching Ethereum wallet balan
 
 ### 1. Direct Balance Fetch
 
-Uses whitelist for token contracts. Resource: [etherscan.io](https://etherscan.io/exportData?type=open-source-contract-codes)
+Uses Moralis API to get a list of top 100 tokens by market cap on Ethereum. Resource: [docs.moralis.io](https://docs.moralis.io/market-insights-api/reference/get-top-erc20-tokens-by-market-cap)
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Endpoint:** /direct/balance/{wallet}
 
@@ -53,11 +56,11 @@ Uses whitelist for token contracts. Resource: [etherscan.io](https://etherscan.i
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**chain:** The blockchain network to use. Defaults to 'eth'. `!Note: currently only Ethereum is supported` 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**limit:** The maximum number of tokens to fetch. Must be an integer between 1 and 10000. Defaults to 10.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**limit:** The maximum number of tokens to fetch. Must be an integer between 1 and 100. Defaults to 10.
 
 **Request:** GET /direct/balance/0x40B38765696e3d5d8d9d834D8AaD4bB6e418E489?chain=eth&limit=100
 
-**Response:** A JSON object containing the balances of all tokens in the wallet. Each key is a token symbol and the corresponding value is the balance of that token.
+**Response:** A JSON object containing the balances of all tokens in the wallet and the total value in USD.
 
 ### 2. Ethplorer API Balance Fetch
 
@@ -75,28 +78,92 @@ No whitelist used for this approach, returns all tokens that have non-zero balan
 
 **Request:** GET /api/balance/0x40B38765696e3d5d8d9d834D8AaD4bB6e418E489
 
-**Response:** A JSON object containing the balances of all tokens in the wallet. Each key is a token symbol and the corresponding value is the balance of that token.
-
+**Response:** A JSON object containing the balances of all tokens in the wallet and the total value in USD.
 
 #### Response example:
 
     {
-        "$Lgc": 30027759.615466926,
-        "0GAS": 634693783629.8918,
-        "AAVE": 0.25,
-        "ABC-RAQ": 0.12345678,
-        "AEVO": 36000000.0,
-        "AIBEN": 16296830.070638577,
-        "AIMEME": 180245928.89033905,
-        "ALCOH": 430309801.1317416,
-        "ALF": 1000000.0,
-        "BABY": 114950644.0196546,
-        "BABYKISHU": 1978.02,
-        "BABYPOO": 2070442.7303935334,
-        "BABYPSYOP": 9282362.362215867,
-        "BABYSAMO": 42340.62712453486,
-        "BABYSHIB": 19184014452758.484,
-        "BALM": 215350255.0224826,
-        "BARRETT": 485608427.1148974,
-        "BENBABY": 140013081.94892895
-    }
+        "balances": {
+            "AAVE": 0.25,
+            "BGBG": 1023.805463897978,
+            "BONE": 88.88888888000001,
+            "COMP": 1.026166,
+            "DONG": 6.9,
+            "ETH": 1443694.7955230272,
+            "ICG": 258.0,
+            "INNBC": 50000000000.0,
+            "JAM": 1111.0,
+            "LINK": 2400001.213955,
+            "LOOT": 69.0,
+            "PEPE": 2000000.0,
+            "PEPE2.0": 74257844.0,
+            "POOH": 19604190.95335947,
+            "SHIB": 31753251930362.97,
+            "SHIBDOGE": 1.454384246410173e+18,
+            "TEST": 1000.0,
+            "TREAT": 33334.0,
+            "TSUKA": 5.55,
+            "UNI": 2.403724,
+            "USDC": 10.0,
+            "VIRAL": 1.0,
+            "WOJAK2.69": 266.333662948,
+            "XEN": 313494.0,
+            "ZUM": 1350000.0
+        },
+        "total_value": 4884777592.40959
+    }   
+
+### 3. Moralis top 100 tokens fetch
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Endpoint:** /moralis
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Method:** GET
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;**Description:** This endpoint returns a list of the top 100 ERC20 tokens by market capitalization. The data is fetched from the Moralis API.
+
+#### Parameters:
+
+None
+
+**Response:** A JSON array containing the top 100 ERC20 tokens by market capitalization. Each element in the array is a JSON object representing a token.
+
+#### Response example:
+
+    [
+        {
+            "contract_address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+            "market_cap_usd": "351277420619",
+            "price_24h_percent_change": "-2.93582",
+            "price_7d_percent_change": "-9.08268853870393",
+            "price_usd": "2881.58",
+            "token_decimals": "18",
+            "token_logo": "https://market-data-images.s3.us-east-1.amazonaws.com/tokenImages/0xf3052f6ed37615d0739e5341097668a189b40574ff102fc5509909ba305351b7.png",
+            "token_name": "Wrapped Ether",
+            "token_symbol": "WETH"
+        },
+        {
+            "contract_address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+            "market_cap_usd": "110246059722",
+            "price_24h_percent_change": "0.28852",
+            "price_7d_percent_change": "-0.01794364794398013",
+            "price_usd": "0.999689",
+            "token_decimals": "6",
+            "token_logo": "https://market-data-images.s3.us-east-1.amazonaws.com/tokenImages/0x63adcb79842ad73769d6f2350d9cab2c8b8e0d37f6071dee9418cbd53319543d.png",
+            "token_name": "Tether USD",
+            "token_symbol": "USDT"
+        },
+        {
+            "contract_address": "0xb8c77482e45f1f44de1745f52c74426c631bdd52",
+            "market_cap_usd": "83552054276",
+            "price_24h_percent_change": "-2.17573",
+            "price_7d_percent_change": "-8.94350968279868",
+            "price_usd": "545.37",
+            "token_decimals": "18",
+            "token_logo": "https://market-data-images.s3.us-east-1.amazonaws.com/tokenImages/0x6b1fc7eb8799dc72fe25ec4ef2518ccb23ca822dddb4978106d378d915509970.png",
+            "token_name": "BNB",
+            "token_symbol": "BNB"
+        },
+        ...
+    ]
+
+
