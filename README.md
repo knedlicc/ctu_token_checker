@@ -9,6 +9,7 @@ Wallet Balance Retrieval: The application offers two endpoints for obtaining the
 The application uses the following environment variables:
 
 **INFURA_API_KEY:** Your Infura API key. This is used to connect to the Ethereum network.
+
 **ETHPLORER_API_KEY:** Your Ethplorer API key. This is used to fetch data from the Ethplorer API.
 
 ## ERC20_ABI

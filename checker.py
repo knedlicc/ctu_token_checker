@@ -52,7 +52,7 @@ def get_balances_direct(wallet):
             web3 = Web3(Web3.HTTPProvider('https://mainnet.infura.io/v3/' + INFURA_API_KEY))
             eth_balance = web3.eth.get_balance(wallet)
             balances['ETH'] = float(web3.from_wei(eth_balance, 'ether'))
-            for index, token in whitelist:
+            for index, token in enumerate(whitelist):
                 if(index == limit):
                     break
                 token = Web3.to_checksum_address(token)
